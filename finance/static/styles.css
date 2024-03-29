@@ -1,0 +1,37 @@
+:root {
+  --black: rgb(25, 25, 25);
+  --white: #dde5ec;
+}
+
+.button {
+  border: 2px solid black;
+  border-radius: 0.625rem;
+  padding: 0.8rem 1.6rem;
+  background-color: var(--white);
+  color: var(--black);
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button:hover {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.alt {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.alt:hover {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+}

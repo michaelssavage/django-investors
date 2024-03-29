@@ -86,7 +86,7 @@ class Investment(models.Model):
     def __str__(self):
         return f"Investment {self.id} - {self.startup_name}"
 
-    def create_bill(self):
+    def generate_bill(self):
         fee = 0
         if self.invested_amount < LARGE_INVESTMENT_THRESHOLD:
             fee += getYearsSincePurchase(self.date_added) * MEMBERSHIP_FEE
@@ -110,6 +110,7 @@ class Investment(models.Model):
                     self.date_added, self.invested_amount, self.percentage_fees
                 )
                 print("Post 2019 fee added")
+        return fee
 
 
 class Bill(models.Model):

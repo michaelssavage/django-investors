@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investors</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body>
+    {% if investor %}
+    <h1>{{ investor.name }}</h1>
+    <p>Address: {{ investor.address }}</p>
+    <p>Credit: {{ investor.credit }}</p>
+    <p>Phone: {{ investor.phone }}</p>
+    <p>Email: {{ investor.email }}</p>
+
+    <div class="button-group">
+      <a href="{% url 'finance:index' %}" class="button alt"
+        >Go to Finance Page</a
+      >
+    </div>
+    {% else %}
+    <p>No investor information available.</p>
+    {% endif %}
+  </body>
+</html>

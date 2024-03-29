@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Page</title>
+  </head>
+  <body>
+    <h1>Investments</h1>
+    {% if investments %} {% for investment in investments %}
+    <p>
+      Startup Name:
+      <a href="{% url 'finance:investment' investment.id %}">
+        {{ investment.startup_name }}
+      </a>
+    </p>
+    {% endfor %} {% else %}
+    <p>No investments are available.</p>
+    {% endif %}
+
+    <h1>Investors</h1>
+    {% if investors %} {% for investor in investors %}
+    <p>
+      Name:
+      <a href="{% url 'finance:investor' investor.id %}">
+        {{ investor.name }}
+      </a>
+    </p>
+    {% endfor %} {% else %}
+    <p>No investments are available.</p>
+    {% endif %}
+  </body>
+</html>
