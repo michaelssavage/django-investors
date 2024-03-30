@@ -16,6 +16,15 @@
     <p>Email: {{ investor.email }}</p>
 
     <div class="button-group">
+      <form
+        method="post"
+        action="{% url 'finance:generate_cash_call' investor.id %}"
+      >
+        {% csrf_token %}<button type="submit" class="button">
+          Generate Cash Call
+        </button>
+      </form>
+
       <a href="{% url 'finance:index' %}" class="button alt"
         >Go to Finance Page</a
       >

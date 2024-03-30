@@ -29,18 +29,8 @@
         method="post"
         action="{% url 'finance:generate_bill' investment.id %}"
       >
-        {% csrf_token %} {% if success_message %}<button
-          type="submit"
-          class="button"
-        >
-          Generate Bill
-        </button>
-        {% else %}
+        {% csrf_token %}
         <button type="submit" class="button">Generate Bill</button>
-
-        {% endif %} {% if error_message %}
-        <p><strong>{{ error_message }}</strong></p>
-        {% endif %}
       </form>
 
       <a href="{% url 'finance:index' %}" class="button alt"

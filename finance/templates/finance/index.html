@@ -36,13 +36,23 @@
     <h2>Bills</h2>
     {% if bills %} {% for bill in bills %}
     <p>
-      {{ forloop.counter }}. Bill:
-      <a href="{% url 'finance:bill' bill.id %}">
-        {{bill.investment_id}} - {{ bill.fees_amount }}
-      </a>
+      {{ forloop.counter }}. {{bill.investment_id}} by {{ bill.investor_id }}:
+      <a href="{% url 'finance:bill' bill.id %}"> €{{ bill.fees_amount}} </a>
     </p>
     {% endfor %} {% else %}
     <p>No bills are available.</p>
+    {% endif %}
+
+    <h2>Cash Calls</h2>
+    {% if cashcalls %} {% for cashcall in cashcalls %}
+    <p>
+      {{ forloop.counter }}. Cash Call:
+      <a href="{% url 'finance:cashcall' cashcall.id %}">
+        {{cashcall.email_send}}
+      </a>
+    </p>
+    {% endfor %} {% else %}
+    <p>No cash calls are available.</p>
     {% endif %}
   </body>
 </html>

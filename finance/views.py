@@ -1,7 +1,8 @@
 from datetime import datetime, UTC
+import re
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from finance.models import Bill, Investment, Investor
+from finance.models import Bill, CashCall, Investment, Investor
 from django.contrib import messages
 from django.urls import reverse
 
@@ -10,7 +11,13 @@ def index(request):
     investments = Investment.objects.order_by("-id")
     investors = Investor.objects.order_by("-id")
     bills = Bill.objects.order_by("-id")
-    context = {"investments": investments, "investors": investors, "bills": bills}
+    cashcalls = CashCall.objects.order_by("-id")
+    context = {
+        "investments": investments,
+        "investors": investors,
+        "bills": bills,
+        "cashcalls": cashcalls,
+    }
     return render(request, "finance/index.html", context)
 
 
@@ -32,6 +39,12 @@ def bill(request, bill_id):
     investment = bill.investment_id
     context = {"bill": bill, "investment": investment, "investor": investor}
     return render(request, "finance/bill.html", context)
+
+
+def cashcall(request, cashcall_id):
+    cashcall = get_object_or_404(CashCall, pk=cashcall_id)
+    context = {"cashcall": cashcall}
+    return render(request, "finance/cashcall.html", context)
 
 
 def generate_bill(request, investment_id):
@@ -60,3 +73,29 @@ def generate_bill(request, investment_id):
     )
     messages.success(request, "Bill created successfully.")
     return HttpResponseRedirect(reverse("finance:investment", args=(investment.id,)))
+
+
+def generate_cash_call(request, investor_id):
+    investor = get_object_or_404(Investor, pk=investor_id)
+
+    bills = Bill.objects.filter(investor_id=investor)
+    total_amount = sum([bill.fees_amount for bill in bills])
+    now = datetime.now(UTC)
+
+    ibanRegex = r"\b(\d{16})\b"
+    match = re.search(ibanRegex, investor.credit)
+    if match:
+        iban = match.group(1)
+    else:
+        iban = investor.credit
+
+    CashCall.objects.create(
+        total_amount=total_amount,
+        IBAN=iban,
+        email_send=investor.email,
+        date_added=now,
+        invoice_status="PENDING",
+    )
+
+    messages.success(request, "Cash Call created successfully.")
+    return HttpResponseRedirect(reverse("finance:investor", args=(investor.id,)))

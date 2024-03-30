@@ -13,17 +13,17 @@
     <p>
       Investor: {% if investor %}
       <a href="{% url 'finance:investor' investor.id %}"
-        >{{ investment.investor_id }}
+        >{{ investor.name }}
       </a>
-      {% else %} {{ investment.investor_id }} {% endif %}
+      {% else %} N/A {% endif %}
     </p>
 
     <p>
       Investment: {% if investment %}
       <a href="{% url 'finance:investment' investment.id %}"
-        >{{ investment.investment_id }}
+        >{{ investment.startup_name }}
       </a>
-      {% else %} {{ investment.investment_id }} {% endif %}
+      {% else %} N/A {% endif %}
     </p>
 
     <p>Fee Amount: €{{ bill.fees_amount }}</p>
