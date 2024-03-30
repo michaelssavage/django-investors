@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from django.db import models
 
 PAYMENT_CHOICES = [
@@ -23,7 +23,7 @@ MEMBERSHIP_FEE = 3000
 
 
 def getYearsSincePurchase(date_val: datetime):
-    return round((datetime.now() - date_val).days / 365)
+    return round((datetime.now(UTC) - date_val).days / 365)
 
 
 def getDayOfYearPercentage(date_val: datetime):
@@ -71,7 +71,7 @@ class Investor(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return f"Investor {self.id} - {self.name}"
+        return self.name
 
 
 class Investment(models.Model):
@@ -84,7 +84,7 @@ class Investment(models.Model):
     fees_type = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
 
     def __str__(self):
-        return f"Investment {self.id} - {self.startup_name}"
+        return self.startup_name
 
     def generate_bill(self):
         fee = 0
@@ -92,7 +92,7 @@ class Investment(models.Model):
             fee += getYearsSincePurchase(self.date_added) * MEMBERSHIP_FEE
             print("membership fee added")
 
-        if self.fee_type == "upfront":
+        if self.fees_type == "upfront":
             fee += (
                 self.invested_amount
                 * self.percentage_fees
@@ -123,7 +123,7 @@ class Bill(models.Model):
     fees_type = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
 
     def __str__(self):
-        return f"Bill {self.id} - {self.fees_amount}"
+        return f"Bill {self.id}"
 
 
 class CashCall(models.Model):
@@ -137,4 +137,4 @@ class CashCall(models.Model):
     )
 
     def __str__(self):
-        return f"CashCall {self.id} - {self.total_amount}"
+        return f"CashCall {self.id}"

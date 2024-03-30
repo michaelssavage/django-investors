@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bills</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+  </head>
+  <body>
+    {% if bill %}
+    <h1>Bill {{ bill.id }}</h1>
+    <p>
+      Investor: {% if investor %}
+      <a href="{% url 'finance:investor' investor.id %}"
+        >{{ investment.investor_id }}
+      </a>
+      {% else %} {{ investment.investor_id }} {% endif %}
+    </p>
+
+    <p>
+      Investment: {% if investment %}
+      <a href="{% url 'finance:investment' investment.id %}"
+        >{{ investment.investment_id }}
+      </a>
+      {% else %} {{ investment.investment_id }} {% endif %}
+    </p>
+
+    <p>Fee Amount: €{{ bill.fees_amount }}</p>
+    <p>Date Added: {{ bill.date_added }}</p>
+    <p>Fee Type: {{ bill.fees_type }}</p>
+
+    <div class="button-group">
+      <a href="{% url 'finance:index' %}" class="button alt"
+        >Go to Finance Page</a
+      >
+    </div>
+    {% else %}
+    <p>No Bill information available.</p>
+    {% endif %}
+  </body>
+</html>

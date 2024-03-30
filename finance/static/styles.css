@@ -1,6 +1,25 @@
 :root {
   --black: rgb(25, 25, 25);
   --white: #dde5ec;
+  --green: #2c975a;
+  --orange: rgb(220, 153, 27);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  padding: 1rem 2rem;
+}
+
+h1 {
+  text-transform: uppercase;
 }
 
 .button {
@@ -34,4 +53,12 @@
   flex-direction: row;
   justify-content: center;
   gap: 1rem;
+}
+
+.success {
+  color: var(--green);
+}
+
+.warning {
+  color: var(--orange);
 }
