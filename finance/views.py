@@ -1,10 +1,9 @@
 from datetime import datetime, UTC
-import re
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from finance.models import Bill, CashCall, Investment, Investor
-from django.contrib import messages
 from django.urls import reverse
+from finance.utils import *
+from finance.models import Bill, CashCall, Investment, Investor
+import re
 
 
 def index(request):
@@ -47,19 +46,16 @@ def cashcall(request, cashcall_id):
     return render(request, "finance/cashcall.html", context)
 
 
-def generate_bill(request, investment_id):
+def generate_investment_bill(request, investment_id):
     investment = get_object_or_404(Investment, pk=investment_id)
+    redirect_uri = reverse("finance:investment", args=(investment.id,))
 
     existing_bill = Bill.objects.filter(
         investor_id=investment.investor_id, investment_id=investment
     ).exists()
     if existing_bill:
-        messages.warning(
-            request, "A bill already exists for this investor and investment."
-        )
-        return HttpResponseRedirect(
-            reverse("finance:investment", args=(investment.id,))
-        )
+        messages.warning(request, BILL_EXISTS_WARNING)
+        return handle_redirect(redirect_uri)
 
     fee = investment.generate_bill()
     now = datetime.now(UTC)
@@ -71,12 +67,13 @@ def generate_bill(request, investment_id):
         date_added=now,
         fees_type=investment.fees_type,
     )
-    messages.success(request, "Bill created successfully.")
-    return HttpResponseRedirect(reverse("finance:investment", args=(investment.id,)))
+    messages.success(request, BILL_SUCCESS)
+    return handle_redirect(redirect_uri)
 
 
-def generate_cash_call(request, investor_id):
+def generate_investor_cash_call(request, investor_id):
     investor = get_object_or_404(Investor, pk=investor_id)
+    redirect_uri = reverse("finance:investor", args=(investor.id,))
 
     bills = Bill.objects.filter(investor_id=investor)
     total_amount = sum([bill.fees_amount for bill in bills])
@@ -89,6 +86,13 @@ def generate_cash_call(request, investor_id):
     else:
         iban = investor.credit
 
+    existing_cash_call = CashCall.objects.filter(
+        total_amount=total_amount, IBAN=iban, email_send=investor.email
+    ).exists()
+    if existing_cash_call:
+        messages.warning(request, CASH_CALL_EXISTS_WARNING)
+        return handle_redirect(redirect_uri)
+
     CashCall.objects.create(
         total_amount=total_amount,
         IBAN=iban,
@@ -97,5 +101,5 @@ def generate_cash_call(request, investor_id):
         invoice_status="PENDING",
     )
 
-    messages.success(request, "Cash Call created successfully.")
-    return HttpResponseRedirect(reverse("finance:investor", args=(investor.id,)))
+    messages.success(request, CASH_CALL_SUCCESS)
+    return handle_redirect(redirect_uri)

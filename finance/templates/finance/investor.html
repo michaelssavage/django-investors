@@ -18,7 +18,7 @@
     <div class="button-group">
       <form
         method="post"
-        action="{% url 'finance:generate_cash_call' investor.id %}"
+        action="{% url 'finance:generate_investor_cash_call' investor.id %}"
       >
         {% csrf_token %}<button type="submit" class="button">
           Generate Cash Call
@@ -29,7 +29,11 @@
         >Go to Finance Page</a
       >
     </div>
-    {% else %}
+    {% if messages %} {% for message in messages %}
+    <p {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+      {{ message }}
+    </p>
+    {% endfor %} {% endif %} {% else %}
     <p>No investor information available.</p>
     {% endif %}
   </body>

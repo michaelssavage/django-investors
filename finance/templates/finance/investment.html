@@ -27,7 +27,7 @@
     <div class="button-group">
       <form
         method="post"
-        action="{% url 'finance:generate_bill' investment.id %}"
+        action="{% url 'finance:generate_investment_bill' investment.id %}"
       >
         {% csrf_token %}
         <button type="submit" class="button">Generate Bill</button>
