@@ -31,3 +31,8 @@ h1 {
 .nowrap {
   white-space: nowrap;
 }
+
+.breakcell {
+  word-wrap: break-word;
+  max-width: 150px;
+}

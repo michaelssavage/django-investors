@@ -27,11 +27,7 @@
     <tr class="align-middle">
       <th>{{ investment.id }}</th>
       <td>{{ investment.investor_id }}</td>
-      <td>
-        <a href="{% url 'finance:investment' investment.id %}" class="mb-3">
-          {{ investment.startup_name }}
-        </a>
-      </td>
+      <td>{{ investment.startup_name }}</td>
       <td>€{{ investment.invested_amount|intcomma}}</td>
       <td>{{ investment.percentage_fees }}%</td>
       <td>{{ investment.date_added }}</td>

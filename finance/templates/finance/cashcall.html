@@ -17,7 +17,7 @@
       <th class="nowrap">Total Amount</th>
       <th>IBAN</th>
       <th>Email</th>
-      <th>Date Added</th>
+      <th class="nowrap">Date Added</th>
       <th class="nowrap">Invoice Status</th>
       <th>Action</th>
     </tr>
@@ -27,7 +27,7 @@
       <th>{{cashcall.id}}</th>
       <td>€{{ cashcall.total_amount|intcomma }}</td>
       <td>{{ cashcall.IBAN }}</td>
-      <td>{{ cashcall.email_send}}</td>
+      <td class="breakcell">{{ cashcall.email_send }}</td>
       <td>{{ cashcall.date_added }}</td>
       <td>{{ cashcall.invoice_status }}</td>
       <td>
