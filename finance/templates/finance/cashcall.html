@@ -37,7 +37,9 @@
           action="{% url 'finance:send_invoice' cashcall.id %}"
         >
           {% csrf_token %}
-          <button type="submit" class="btn btn-dark">Send Invoice</button>
+          <button type="submit" class="btn btn-dark nowrap">
+            Send Invoice
+          </button>
         </form>
         {% endif %}
       </td>

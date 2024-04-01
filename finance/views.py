@@ -1,9 +1,13 @@
 from datetime import datetime, UTC
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from finance.utils import *
 from finance.models import Bill, CashCall, Investment, Investor
 import re
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from django.utils import formats
 
 
 def index(request):
@@ -167,6 +171,21 @@ def update_invoice_status(request, cashcall_id):
 
 
 def send_invoice(request, cashcall_id):
-    messages.success(request, "Invoice has been sent to investor.")
-    redirect_uri = reverse("finance:cashcall", args=(cashcall_id,))
-    return handle_redirect(redirect_uri)
+    cashcall = get_object_or_404(CashCall, pk=cashcall_id)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f"attachment; filename={cashcall.id}-invoice.pdf"
+    p = canvas.Canvas(response)
+
+    logo = ImageReader("finance/static/logo.png")
+    p.drawImage(logo, 10, 700, width=400, mask="auto", preserveAspectRatio=True)
+    date_string = formats.date_format(cashcall.date_added, "DATE_FORMAT")
+    p.drawString(100, 680, "Date Added: " + date_string)
+
+    p.drawString(100, 600, "email: " + cashcall.email_send)
+    p.drawString(100, 580, "IBAN: " + cashcall.IBAN)
+    p.drawString(100, 560, "Total Amount: €" + str(cashcall.total_amount))
+
+    p.showPage()
+    p.save()
+
+    return response
