@@ -1,49 +1,42 @@
 <!-- prettier-ignore -->
 {% extends "finance/base.html" %} 
 {% block title %}Investors{% endblock %}
+{% block h1 %}Investors{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <h1 class="text-center mt-3 mb-3">Investors</h1>
 
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark">Home</a>
-  </div>
-
-  {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %} {% if investors %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Address</th>
-        <th scope="col">Credit</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for investor in investors %}
-      <tr>
-        <th>{{ investor.id }}</th>
-        <td>
-          <a href="{% url 'finance:investor' investor.id %}" class="mb-3">
-            {{ investor.name }}
-          </a>
-        </td>
-        <td>{{ investor.address }}</td>
-        <td>{{ investor.credit}}</td>
-        <td>{{ investor.phone }}</td>
-        <td>{{ investor.email }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No investors are available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if investors %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Credit</th>
+      <th>Phone</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for investor in investors %}
+    <tr>
+      <th>{{ investor.id }}</th>
+      <td>
+        <a href="{% url 'finance:investor' investor.id %}" class="mb-3">
+          {{ investor.name }}
+        </a>
+      </td>
+      <td>{{ investor.address }}</td>
+      <td>{{ investor.credit}}</td>
+      <td>{{ investor.phone }}</td>
+      <td>{{ investor.email }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No investors are available.</p>
+{% endif %} {% endblock %}

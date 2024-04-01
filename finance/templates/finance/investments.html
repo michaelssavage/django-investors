@@ -2,54 +2,47 @@
 {% extends "finance/base.html" %} 
 {% load humanize %}
 {% block title %}Investments{% endblock %}
+{% block h1 %}Investments{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <h1 class="text-center mt-3 mb-3">Investments</h1>
 
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark">Home</a>
-  </div>
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %}
 
-  {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %}
-
-  <!-- prettier-ignore -->
-  {% if investments %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Investor</th>
-        <th scope="col">Startup Name</th>
-        <th scope="col">Invested Amount</th>
-        <th scope="col">Percentage Fee</th>
-        <th scope="col">Date Added</th>
-        <th scope="col">Fee Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for investment in investments %}
-      <tr>
-        <th>{{ investment.id }}</th>
-        <td>{{ investment.investor_id }}</td>
-        <td>
-          <a href="{% url 'finance:investment' investment.id %}" class="mb-3">
-            {{ investment.startup_name }}
-          </a>
-        </td>
-        <td>€{{ investment.invested_amount|intcomma}}</td>
-        <td>{{ investment.percentage_fees }}%</td>
-        <td>{{ investment.date_added }}</td>
-        <td>{{ investment.fees_type }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No investments are available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+<!-- prettier-ignore -->
+{% if investments %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Investor</th>
+      <th class="nowrap">Startup Name</th>
+      <th class="nowrap">Invested Amount</th>
+      <th class="nowrap">Percentage Fee</th>
+      <th class="nowrap">Date Added</th>
+      <th class="nowrap">Fee Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for investment in investments %}
+    <tr>
+      <th>{{ investment.id }}</th>
+      <td>{{ investment.investor_id }}</td>
+      <td>
+        <a href="{% url 'finance:investment' investment.id %}" class="mb-3">
+          {{ investment.startup_name }}
+        </a>
+      </td>
+      <td>€{{ investment.invested_amount|intcomma}}</td>
+      <td>{{ investment.percentage_fees }}%</td>
+      <td>{{ investment.date_added }}</td>
+      <td>{{ investment.fees_type }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No investments are available.</p>
+{% endif %} {% endblock %}

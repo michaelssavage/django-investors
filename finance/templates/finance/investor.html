@@ -1,60 +1,51 @@
 <!-- prettier-ignore -->
 {% extends "finance/base.html" %} 
 {% block title %}Investors{% endblock %}
+{% block h1 %}{{ investor.name }}{% endblock %}
 {% block content %}
-<div class="container">
-  <h1>{{ investor.name }}</h1>
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark"
-      >Home Page</a
-    >
 
-    <a href="{% url 'finance:investors' %}" class="btn btn-outline-dark"
-      >Investors</a
-    >
-
-    <form
-      method="post"
-      action="{% url 'finance:generate_investor_cash_call' investor.id %}"
-    >
-      {% csrf_token %}<button type="submit" class="btn btn-dark">
-        Generate Cash Call
-      </button>
-    </form>
-  </div>
   {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %} {% if investor %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Address</th>
-        <th scope="col">Credit</th>
-        <th scope="col">Phone</th>
-        <th scope="col">Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>{{ investor.id }}</th>
-        <td>
-          <a href="{% url 'finance:investor' investor.id %}" class="mb-3">
-            {{ investor.name }}
-          </a>
-        </td>
-        <td>{{ investor.address }}</td>
-        <td>{{ investor.credit}}</td>
-        <td>{{ investor.phone }}</td>
-        <td>{{ investor.email }}</td>
-      </tr>
-    </tbody>
-  </table>
-  {% else %}
-  <p>No investor information available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if investor %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Credit</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="align-middle">
+      <th>{{ investor.id }}</th>
+      <td>
+        <a href="{% url 'finance:investor' investor.id %}" class="mb-3">
+          {{ investor.name }}
+        </a>
+      </td>
+      <td>{{ investor.address }}</td>
+      <td>{{ investor.credit}}</td>
+      <td>{{ investor.phone }}</td>
+      <td>{{ investor.email }}</td>
+      <td>
+        <form
+          method="post"
+          action="{% url 'finance:generate_investor_cash_call' investor.id %}"
+        >
+          {% csrf_token %}<button type="submit" class="btn btn-dark nowrap">
+            Generate Cash Call
+          </button>
+        </form>
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% else %}
+<p>No investor information available.</p>
+{% endif %} {% endblock %}

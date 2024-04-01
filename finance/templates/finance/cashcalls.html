@@ -2,49 +2,42 @@
 {% extends "finance/base.html" %} 
 {% load humanize %}
 {% block title %}Cash Calls{% endblock %}
+{% block h1 %}Cash Calls{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <h1 class="text-center mt-3 mb-3">Cash Calls</h1>
 
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark">Home</a>
-  </div>
-
-  {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %} {% if cashcalls %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col" style="white-space: nowrap">Total Amount</th>
-        <th scope="col">IBAN</th>
-        <th scope="col">Email</th>
-        <th scope="col">Date Added</th>
-        <th scope="col" style="white-space: nowrap">Invoice Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for cashcall in cashcalls %}
-      <tr>
-        <th>
-          <a href="{% url 'finance:cashcall' cashcall.id %}" class="mb-3">
-            {{cashcall.id}}
-          </a>
-        </th>
-        <td>€{{ cashcall.total_amount|intcomma }}</td>
-        <td>{{ cashcall.IBAN }}</td>
-        <td>{{ cashcall.email_send}}</td>
-        <td>{{ cashcall.date_added }}</td>
-        <td>{{ cashcall.invoice_status }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No cashcalls are available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if cashcalls %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th class="nowrap">Total Amount</th>
+      <th>IBAN</th>
+      <th>Email</th>
+      <th class="nowrap">Date Added</th>
+      <th class="nowrap">Invoice Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cashcall in cashcalls %}
+    <tr>
+      <th>
+        <a href="{% url 'finance:cashcall' cashcall.id %}" class="mb-3">
+          {{cashcall.id}}
+        </a>
+      </th>
+      <td>€{{ cashcall.total_amount|intcomma }}</td>
+      <td>{{ cashcall.IBAN }}</td>
+      <td>{{ cashcall.email_send}}</td>
+      <td>{{ cashcall.date_added }}</td>
+      <td>{{ cashcall.invoice_status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No cashcalls are available.</p>
+{% endif %} {% endblock %}

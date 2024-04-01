@@ -2,74 +2,65 @@
 {% extends "finance/base.html" %} 
 {% load humanize %}
 {% block title %}Cash Calls{% endblock %}
+{% block h1 %}Cash Call {{ cashcall.id }}{% endblock %}
 {% block content %}
-<div class="container">
-  <h1>Cash Call {{ cashcall.id }}</h1>
 
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark">Home</a>
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if cashcall %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th class="nowrap">Total Amount</th>
+      <th>IBAN</th>
+      <th>Email</th>
+      <th>Date Added</th>
+      <th class="nowrap">Invoice Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="align-middle">
+      <th>{{cashcall.id}}</th>
+      <td>€{{ cashcall.total_amount|intcomma }}</td>
+      <td>{{ cashcall.IBAN }}</td>
+      <td>{{ cashcall.email_send}}</td>
+      <td>{{ cashcall.date_added }}</td>
+      <td>{{ cashcall.invoice_status }}</td>
+      <td>
+        {% if cashcall.invoice_status == "Validated" %}
+        <form
+          method="post"
+          action="{% url 'finance:send_invoice' cashcall.id %}"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-dark">Send Invoice</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-    <a href="{% url 'finance:cashcalls' %}" class="btn btn-outline-dark"
-      >Cash Calls</a
-    >
+<label for="invoice_status" class="mt-3 fw-bold">Update Invoice Status</label>
+<form
+  action="{% url 'finance:update_invoice_status' cashcall.id %}"
+  method="post"
+  class="d-flex flex-row align-items-center gap-2 w-25"
+>
+  {% csrf_token %}
+  <select class="form-select" id="invoice_status" name="invoice_status">
+    <option>Pending</option>
+    <option value="Validated">Validated</option>
+    <option value="Paid">Paid</option>
+    <option value="Overdue">Overdue</option>
+  </select>
+  <button type="submit" class="btn btn-dark">Submit</button>
+</form>
 
-    {% if cashcall.invoice_status == "Validated" %}
-    <form method="post" action="{% url 'finance:send_invoice' cashcall.id %}">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-dark">Send Invoice</button>
-    </form>
-    {% endif %}
-  </div>
-  {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %} {% if cashcall %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col" style="white-space: nowrap">Total Amount</th>
-        <th scope="col">IBAN</th>
-        <th scope="col">Email</th>
-        <th scope="col">Date Added</th>
-        <th scope="col" style="white-space: nowrap">Invoice Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>
-          <a href="{% url 'finance:cashcall' cashcall.id %}" class="mb-3">
-            {{cashcall.id}}
-          </a>
-        </th>
-        <td>€{{ cashcall.total_amount|intcomma }}</td>
-        <td>{{ cashcall.IBAN }}</td>
-        <td>{{ cashcall.email_send}}</td>
-        <td>{{ cashcall.date_added }}</td>
-        <td>{{ cashcall.invoice_status }}</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <label for="invoice_status" class="mt-3 fw-bold">Update Invoice Status</label>
-  <form
-    action="{% url 'finance:update_invoice_status' cashcall.id %}"
-    method="post"
-    class="d-flex flex-row align-items-center gap-2 w-25"
-  >
-    {% csrf_token %}
-    <select class="form-select" id="invoice_status" name="invoice_status">
-      <option>Pending</option>
-      <option value="Validated">Validated</option>
-      <option value="Paid">Paid</option>
-      <option value="Overdue">Overdue</option>
-    </select>
-    <button type="submit" class="btn btn-dark">Submit</button>
-  </form>
-
-  {% else %}
-  <p>No Cash Call information available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+{% else %}
+<p>No Cash Call information available.</p>
+{% endif %} {% endblock %}

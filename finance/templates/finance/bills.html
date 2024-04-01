@@ -2,47 +2,40 @@
 {% extends "finance/base.html" %} 
 {% load humanize %}
 {% block title %}Bills{% endblock %}
+{% block h1 %}Bills{% endblock %}
 {% block content %}
-<div class="container-fluid">
-  <h1 class="text-center mt-3 mb-3">Bills</h1>
 
-  <div class="button-group">
-    <a href="{% url 'finance:index' %}" class="btn btn-outline-dark">Home</a>
-  </div>
-
-  {% if messages %} {% for message in messages %}
-  <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
-    {{ message }}
-  </p>
-  {% endfor %} {% endif %} {% if bills %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Investor</th>
-        <th scope="col">Investment</th>
-        <th scope="col">Fee Amount</th>
-        <th scope="col">Date Added</th>
-        <th scope="col">Fee Type</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for bill in bills %}
-      <tr>
-        <th>
-          <a href="{% url 'finance:bill' bill.id %}">{{ bill.id }} </a>
-        </th>
-        <td>{{ bill.investor_id }}</td>
-        <td>{{ bill.investment_id }}</td>
-        <td>€{{ bill.fees_amount|intcomma}}</td>
-        <td>{{ bill.date_added }}</td>
-        <td>{{ bill.fees_type }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>No bills are available.</p>
-  {% endif %}
-</div>
-{% endblock %}
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if bills %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Investor</th>
+      <th>Investment</th>
+      <th>Fee Amount</th>
+      <th>Date Added</th>
+      <th>Fee Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bill in bills %}
+    <tr>
+      <th>
+        <a href="{% url 'finance:bill' bill.id %}">{{ bill.id }} </a>
+      </th>
+      <td>{{ bill.investor_id }}</td>
+      <td>{{ bill.investment_id }}</td>
+      <td>€{{ bill.fees_amount|intcomma}}</td>
+      <td>{{ bill.date_added }}</td>
+      <td>{{ bill.fees_type }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No bills are available.</p>
+{% endif %} {% endblock %}
