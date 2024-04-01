@@ -70,6 +70,9 @@ class Investor(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField()
 
+    class Meta:
+        ordering = ["id"]
+
     def __str__(self):
         return self.name
 
@@ -82,6 +85,9 @@ class Investment(models.Model):
     percentage_fees = models.DecimalField(max_digits=2, decimal_places=0)
     date_added = models.DateTimeField()
     fees_type = models.CharField(max_length=10, choices=PAYMENT_CHOICES)
+
+    class Meta:
+        ordering = ["id"]
 
     def __str__(self):
         return self.startup_name
@@ -122,6 +128,9 @@ class Bill(models.Model):
     date_added = models.DateTimeField()
     fees_type = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
 
+    class Meta:
+        ordering = ["id"]
+
     def __str__(self):
         return f"Bill {self.id}"
 
@@ -135,6 +144,9 @@ class CashCall(models.Model):
     invoice_status = models.CharField(
         max_length=20, choices=INVOICE_STATUS_CHOICES, default="Pending"
     )
+
+    class Meta:
+        ordering = ["id"]
 
     def __str__(self):
         return f"CashCall {self.id}"

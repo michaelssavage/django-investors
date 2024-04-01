@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
 import pandas as pd
 from finance.models import Investment, Investor
-from django.apps import apps
 
 
 class Command(BaseCommand):
-    help = "Load a investments csv file into the database"
+    help = "Load an investments csv file into the database"
 
     def add_arguments(self, parser):
         parser.add_argument("--path", type=str, help="Path to the CSV file")
@@ -28,7 +27,6 @@ class Command(BaseCommand):
         ]
 
         Investment.objects.bulk_create(objs)
-        self.stdout.write(self.style.SUCCESS("Investments imported successfully"))
 
     def create_investor(self, row_iter):
         objs = [
@@ -44,7 +42,6 @@ class Command(BaseCommand):
         ]
 
         Investor.objects.bulk_create(objs)
-        self.stdout.write(self.style.SUCCESS("Investors imported successfully"))
 
     def handle(self, *args, **kwargs):
         csv_file = kwargs["path"]

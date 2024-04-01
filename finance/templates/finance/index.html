@@ -24,7 +24,7 @@
     <h2>Investors</h2>
     {% if investors %} {% for investor in investors %}
     <p>
-      {{ forloop.counter }}. Name:
+      {{ investor.id }}. Name:
       <a href="{% url 'finance:investor' investor.id %}">
         {{ investor.name }}
       </a>

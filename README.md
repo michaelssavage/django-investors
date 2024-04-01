@@ -1,18 +1,16 @@
 # oneragtime-challenge
 
-## Excel Book
-
-The supplied data for creating the Modal is in oneragtime.xlsx.
+```
+Requirements: django, docker-compose, pandas
+```
 
 ## Running the database with docker
 
-Spin up a Postgres database with `./scripts/start-dev-db.sh`
+Spin up a Postgres database by running `./scripts/start-dev-db.sh`
 
 ## Initial Data Loading
 
-Add the investments.csv and investors.csv to the root of the project, then run these:
-
-`python manage.py populate_data --path investor.csv --model investor`
+Add the investments.csv and investors.csv to the database by running `./scripts/load-postgres-data.sh`
 
 ## Run the app
 
