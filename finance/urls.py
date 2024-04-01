@@ -25,4 +25,9 @@ urlpatterns = [
         views.generate_all_cash_calls,
         name="generate_all_cash_calls",
     ),
+    path(
+        "update_invoice_status/<int:cashcall_id>/",
+        views.update_invoice_status,
+        name="update_invoice_status",
+    ),
 ]

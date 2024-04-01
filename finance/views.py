@@ -46,13 +46,6 @@ def cashcall(request, cashcall_id):
     return render(request, "finance/cashcall.html", context)
 
 
-def generate_all_bills(request):
-    investments = Investment.objects.all()
-    for investment in investments:
-        generate_investment_bill(request, investment.id)
-    return handle_redirect(reverse("finance:index"))
-
-
 def generate_investment_bill(request, investment_id):
     investment = get_object_or_404(Investment, pk=investment_id)
     redirect_uri = reverse("finance:investment", args=(investment.id,))
@@ -76,13 +69,6 @@ def generate_investment_bill(request, investment_id):
     )
     messages.success(request, BILL_SUCCESS)
     return handle_redirect(redirect_uri)
-
-
-def generate_all_cash_calls(request):
-    investors = Investor.objects.all()
-    for investor in investors:
-        generate_investor_cash_call(request, investor.id)
-    return handle_redirect(reverse("finance:index"))
 
 
 def generate_investor_cash_call(request, investor_id):
@@ -116,4 +102,45 @@ def generate_investor_cash_call(request, investor_id):
     )
 
     messages.success(request, CASH_CALL_SUCCESS)
+    return handle_redirect(redirect_uri)
+
+
+def generate_all_bills(request):
+    investments = Investment.objects.all()
+    redirect_uri = reverse("finance:index")
+    if not investments:
+        messages.warning(request, "No investments found. Please add investments first.")
+        return handle_redirect(redirect_uri)
+    for investment in investments:
+        generate_investment_bill(request, investment.id)
+
+    messages.success(request, "All bills generated successfully.")
+    return handle_redirect(redirect_uri)
+
+
+def generate_all_cash_calls(request):
+    investors = Investor.objects.all()
+    bills = Bill.objects.all()
+    redirect_uri = reverse("finance:index")
+    if not bills:
+        messages.warning(request, "No bills found. Please generate bills first.")
+        return handle_redirect(redirect_uri)
+    for investor in investors:
+        generate_investor_cash_call(request, investor.id)
+
+    messages.success(request, "All cash calls generated successfully.")
+    return handle_redirect(redirect_uri)
+
+
+def update_invoice_status(request, cashcall_id):
+    cashcall = get_object_or_404(CashCall, pk=cashcall_id)
+    invoice_status = request.POST.get("invoice_status")
+    redirect_uri = reverse("finance:cashcall", args=(cashcall.id,))
+    if cashcall.invoice_status == invoice_status:
+        messages.warning(request, "Please choose a different value.")
+        return handle_redirect(redirect_uri)
+
+    cashcall.invoice_status = invoice_status
+    cashcall.save()
+    messages.success(request, "Invoice status updated successfully.")
     return handle_redirect(redirect_uri)

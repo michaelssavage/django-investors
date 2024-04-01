@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} {% load humanize %}
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -41,6 +41,12 @@
         </form>
       </div>
 
+      {% if messages %} {% for message in messages %}
+      <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+        {{ message }}
+      </p>
+      {% endfor %} {% endif %}
+
       <div class="row">
         <div class="col-sm-6 col-md-3">
           <h2>Investments</h2>
@@ -70,10 +76,10 @@
           <h2>Bills</h2>
           {% if bills %} {% for bill in bills %}
           <p class="mt-3 mb-0">
-            {{ bill.id }}. Investor: {{ bill.investor_id }}:
+            {{ bill.id }}. Investor: {{ bill.investor_id }}
           </p>
           <a href="{% url 'finance:bill' bill.id %}" class="mb-3">
-            {{bill.investment_id}}: €{{ bill.fees_amount}}
+            {{bill.investment_id}}: €{{bill.fees_amount|intcomma}}
           </a>
           {% endfor %} {% else %}
           <p>No bills are available.</p>

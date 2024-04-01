@@ -7,14 +7,6 @@ PAYMENT_CHOICES = [
     ("yearly", "Yearly"),
 ]
 
-INVOICE_STATUS_CHOICES = [
-    ("Pending", "Pending"),
-    ("Validated", "Validated"),
-    ("Sent", "Sent"),
-    ("Paid", "Paid"),
-    ("Overdue", "Overdue"),
-]
-
 POINT_TWO_PERCENT = Decimal(0.002)
 POINT_FIVE_PERCENT = Decimal(0.005)
 ONE_PERCENT = Decimal(0.01)
@@ -137,6 +129,13 @@ class Bill(models.Model):
 
 
 class CashCall(models.Model):
+    INVOICE_STATUS_CHOICES = [
+        ("Pending", "Pending"),
+        ("Validated", "Validated"),
+        ("Sent", "Sent"),
+        ("Paid", "Paid"),
+        ("Overdue", "Overdue"),
+    ]
     id = models.AutoField(primary_key=True)
     total_amount = models.DecimalField(max_digits=12, decimal_places=0)
     IBAN = models.CharField(max_length=100)

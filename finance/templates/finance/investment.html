@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} {% load humanize %}
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -31,7 +31,7 @@
         {% else %} {{ investment.investor_id }} {% endif %}
       </p>
 
-      <p>Invested Amount: €{{ investment.invested_amount }}</p>
+      <p>Invested Amount: €{{ investment.invested_amount|intcomma }}</p>
       <p>Percentage Fee: {{ investment.percentage_fees }}%</p>
       <p>Date Added: {{ investment.date_added }}</p>
       <p>Fee Type: {{ investment.fees_type }}</p>
@@ -53,7 +53,7 @@
       </div>
 
       {% if messages %} {% for message in messages %}
-      <p {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+      <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
         {{ message }}
       </p>
       {% endfor %} {% endif %} {% else %}
