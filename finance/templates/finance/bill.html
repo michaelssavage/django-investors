@@ -8,35 +8,37 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}" />
   </head>
   <body>
-    {% if bill %}
-    <h1>Bill {{ bill.id }}</h1>
-    <p>
-      Investor: {% if investor %}
-      <a href="{% url 'finance:investor' investor.id %}"
-        >{{ investor.name }}
-      </a>
-      {% else %} N/A {% endif %}
-    </p>
+    <div class="container">
+      {% if bill %}
+      <h1>Bill {{ bill.id }}</h1>
+      <p>
+        Investor: {% if investor %}
+        <a href="{% url 'finance:investor' investor.id %}"
+          >{{ investor.name }}
+        </a>
+        {% else %} N/A {% endif %}
+      </p>
 
-    <p>
-      Investment: {% if investment %}
-      <a href="{% url 'finance:investment' investment.id %}"
-        >{{ investment.startup_name }}
-      </a>
-      {% else %} N/A {% endif %}
-    </p>
+      <p>
+        Investment: {% if investment %}
+        <a href="{% url 'finance:investment' investment.id %}"
+          >{{ investment.startup_name }}
+        </a>
+        {% else %} N/A {% endif %}
+      </p>
 
-    <p>Fee Amount: €{{ bill.fees_amount }}</p>
-    <p>Date Added: {{ bill.date_added }}</p>
-    <p>Fee Type: {{ bill.fees_type }}</p>
+      <p>Fee Amount: €{{ bill.fees_amount }}</p>
+      <p>Date Added: {{ bill.date_added }}</p>
+      <p>Fee Type: {{ bill.fees_type }}</p>
 
-    <div class="button-group">
-      <a href="{% url 'finance:index' %}" class="button alt"
-        >Go to Finance Page</a
-      >
+      <div class="button-group">
+        <a href="{% url 'finance:index' %}" class="button alt"
+          >Go to Finance Page</a
+        >
+      </div>
+      {% else %}
+      <p>No Bill information available.</p>
+      {% endif %}
     </div>
-    {% else %}
-    <p>No Bill information available.</p>
-    {% endif %}
   </body>
 </html>

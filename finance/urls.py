@@ -19,4 +19,10 @@ urlpatterns = [
         views.generate_investor_cash_call,
         name="generate_investor_cash_call",
     ),
+    path("generate_all_bills/", views.generate_all_bills, name="generate_all_bills"),
+    path(
+        "generate_all_cash_calls/",
+        views.generate_all_cash_calls,
+        name="generate_all_cash_calls",
+    ),
 ]

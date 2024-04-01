@@ -27,6 +27,7 @@ class Command(BaseCommand):
         ]
 
         Investment.objects.bulk_create(objs)
+        self.stdout.write(self.style.SUCCESS("Investment: Success"))
 
     def create_investor(self, row_iter):
         objs = [

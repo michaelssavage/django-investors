@@ -8,21 +8,23 @@
     <link rel="stylesheet" href="{% static 'styles.css' %}" />
   </head>
   <body>
-    {% if cashcall %}
-    <h1>Cash Call {{ cashcall.id }}</h1>
-    <p>Total Amount: {{ cashcall.total_amount }}</p>
-    <p>IBAN: {{ cashcall.IBAN }}</p>
-    <p>Email: {{ cashcall.email_send }}</p>
-    <p>Date Added: {{ cashcall.date_added }}</p>
-    <p>Invoice Status: {{ cashcall.invoice_status }}</p>
+    <div class="container">
+      {% if cashcall %}
+      <h1>Cash Call {{ cashcall.id }}</h1>
+      <p>Total Amount: {{ cashcall.total_amount }}</p>
+      <p>IBAN: {{ cashcall.IBAN }}</p>
+      <p>Email: {{ cashcall.email_send }}</p>
+      <p>Date Added: {{ cashcall.date_added }}</p>
+      <p>Invoice Status: {{ cashcall.invoice_status }}</p>
 
-    <div class="button-group">
-      <a href="{% url 'finance:index' %}" class="button alt"
-        >Go to Finance Page</a
-      >
+      <div class="button-group">
+        <a href="{% url 'finance:index' %}" class="button alt"
+          >Go to Finance Page</a
+        >
+      </div>
+      {% else %}
+      <p>No Cash Call information available.</p>
+      {% endif %}
     </div>
-    {% else %}
-    <p>No Cash Call information available.</p>
-    {% endif %}
   </body>
 </html>

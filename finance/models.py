@@ -1,4 +1,5 @@
 from datetime import datetime, UTC
+from decimal import Decimal
 from django.db import models
 
 PAYMENT_CHOICES = [
@@ -14,10 +15,10 @@ INVOICE_STATUS_CHOICES = [
     ("Overdue", "Overdue"),
 ]
 
-POINT_TWO_PERCENT = 0.002
-POINT_FIVE_PERCENT = 0.005
-ONE_PERCENT = 0.01
-FEE_UPDATE_DATE = datetime(2019, 4, 1)
+POINT_TWO_PERCENT = Decimal(0.002)
+POINT_FIVE_PERCENT = Decimal(0.005)
+ONE_PERCENT = Decimal(0.01)
+FEE_UPDATE_DATE = datetime(2019, 4, 1).timestamp()
 LARGE_INVESTMENT_THRESHOLD = 50000
 MEMBERSHIP_FEE = 3000
 
@@ -28,11 +29,11 @@ def getYearsSincePurchase(date_val: datetime):
 
 def getDayOfYearPercentage(date_val: datetime):
     value = date_val.timetuple().tm_yday
-    return 1 if value > 365 else round((value / 365), 2)
+    return Decimal(1) if value > 365 else Decimal(round((value / 365), 2))
 
 
 def addPre2019Fees(date_val: datetime, invested_amount: int, percentage_fees: int):
-    fee: float = 0
+    fee: Decimal = 0
 
     # initial fee
     fee += getDayOfYearPercentage(date_val) * invested_amount * percentage_fees
@@ -43,7 +44,7 @@ def addPre2019Fees(date_val: datetime, invested_amount: int, percentage_fees: in
 
 
 def addPost2019Fees(date_val: datetime, invested_amount: int, percentage_fees: int):
-    fee: float = 0
+    fee: Decimal = 0
 
     # initial fee
     fee += getDayOfYearPercentage(date_val) * invested_amount * percentage_fees
@@ -106,7 +107,7 @@ class Investment(models.Model):
             )
             print("upfront fee added")
         else:
-            if self.date_added < FEE_UPDATE_DATE:
+            if self.date_added.timestamp() < FEE_UPDATE_DATE:
                 fee += addPre2019Fees(
                     self.date_added, self.invested_amount, self.percentage_fees
                 )

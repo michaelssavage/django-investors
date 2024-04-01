@@ -46,6 +46,13 @@ def cashcall(request, cashcall_id):
     return render(request, "finance/cashcall.html", context)
 
 
+def generate_all_bills(request):
+    investments = Investment.objects.all()
+    for investment in investments:
+        generate_investment_bill(request, investment.id)
+    return handle_redirect(reverse("finance:index"))
+
+
 def generate_investment_bill(request, investment_id):
     investment = get_object_or_404(Investment, pk=investment_id)
     redirect_uri = reverse("finance:investment", args=(investment.id,))
@@ -69,6 +76,13 @@ def generate_investment_bill(request, investment_id):
     )
     messages.success(request, BILL_SUCCESS)
     return handle_redirect(redirect_uri)
+
+
+def generate_all_cash_calls(request):
+    investors = Investor.objects.all()
+    for investor in investors:
+        generate_investor_cash_call(request, investor.id)
+    return handle_redirect(reverse("finance:index"))
 
 
 def generate_investor_cash_call(request, investor_id):

@@ -23,32 +23,6 @@ h1 {
   text-transform: uppercase;
 }
 
-.button {
-  border: 2px solid black;
-  border-radius: 0.625rem;
-  padding: 0.8rem 1.6rem;
-  background-color: var(--white);
-  color: var(--black);
-  transition: background-color 0.3s, color 0.3s;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.button:hover {
-  background-color: var(--black);
-  color: var(--white);
-}
-
-.alt {
-  background-color: var(--black);
-  color: var(--white);
-}
-
-.alt:hover {
-  background-color: var(--white);
-  color: var(--black);
-}
-
 .disabled {
   background-color: var(--grey);
   color: var(--white);
@@ -59,6 +33,7 @@ h1 {
   flex-direction: row;
   justify-content: center;
   gap: 1rem;
+  margin: 2rem 0;
 }
 
 .success {
