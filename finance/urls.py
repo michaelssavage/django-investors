@@ -5,10 +5,14 @@ from . import views
 app_name = "finance"
 urlpatterns = [
     path("", views.index, name="index"),
+    path("investment/", views.investments, name="investments"),
     path("investment/<int:investment_id>/", views.investment, name="investment"),
+    path("investor/", views.investors, name="investors"),
     path("investor/<int:investor_id>/", views.investor, name="investor"),
+    path("bill/", views.bills, name="bills"),
     path("bill/<int:bill_id>/", views.bill, name="bill"),
     path("cashcall/<int:cashcall_id>/", views.cashcall, name="cashcall"),
+    path("cashcall/", views.cashcalls, name="cashcalls"),
     path(
         "generate_investment_bill/<int:investment_id>/",
         views.generate_investment_bill,
@@ -30,4 +34,5 @@ urlpatterns = [
         views.update_invoice_status,
         name="update_invoice_status",
     ),
+    path("send_invoice/<int:cashcall_id>/", views.send_invoice, name="send_invoice"),
 ]

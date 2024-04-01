@@ -20,33 +20,54 @@
   </head>
   <body>
     <div class="container">
-      {% if bill %}
       <h1>Bill {{ bill.id }}</h1>
-      <p>
-        Investor: {% if investor %}
-        <a href="{% url 'finance:investor' investor.id %}"
-          >{{ investor.name }}
-        </a>
-        {% else %} N/A {% endif %}
-      </p>
-
-      <p>
-        Investment: {% if investment %}
-        <a href="{% url 'finance:investment' investment.id %}"
-          >{{ investment.startup_name }}
-        </a>
-        {% else %} N/A {% endif %}
-      </p>
-
-      <p>Fee Amount: €{{ bill.fees_amount|intcomma}}</p>
-      <p>Date Added: {{ bill.date_added }}</p>
-      <p>Fee Type: {{ bill.fees_type }}</p>
 
       <div class="button-group">
         <a href="{% url 'finance:index' %}" class="btn btn-outline-dark"
-          >Go to Finance Page</a
+          >Home</a
+        >
+
+        <a href="{% url 'finance:bills' %}" class="btn btn-outline-dark"
+          >Bills</a
         >
       </div>
+
+      {% if bill %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Investor</th>
+            <th scope="col">Investment</th>
+            <th scope="col">Fee Amount</th>
+            <th scope="col">Date Added</th>
+            <th scope="col">Fee Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{ bill.id }}</th>
+            <td>
+              {% if investor %}
+              <a href="{% url 'finance:investor' investor.id %}"
+                >{{ investor.name }}
+              </a>
+              {% else %} N/A {% endif %}
+            </td>
+            <td>
+              {% if investment %}
+              <a href="{% url 'finance:investment' investment.id %}"
+                >{{ investment.startup_name }}
+              </a>
+              {% else %} N/A {% endif %}
+            </td>
+            <td>€{{ bill.fees_amount|intcomma}}</td>
+            <td>{{ bill.date_added }}</td>
+            <td>{{ bill.fees_type }}</td>
+          </tr>
+        </tbody>
+      </table>
+
       {% else %}
       <p>No Bill information available.</p>
       {% endif %}

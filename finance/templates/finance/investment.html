@@ -20,43 +20,63 @@
   </head>
   <body>
     <div class="container">
-      {% if investment %}
-      <h1>{{ investment.startup_name }}</h1>
-
-      <p>
-        Investor: {% if investor %}
-        <a href="{% url 'finance:investor' investor.id %}"
-          >{{ investment.investor_id }}
-        </a>
-        {% else %} {{ investment.investor_id }} {% endif %}
-      </p>
-
-      <p>Invested Amount: €{{ investment.invested_amount|intcomma }}</p>
-      <p>Percentage Fee: {{ investment.percentage_fees }}%</p>
-      <p>Date Added: {{ investment.date_added }}</p>
-      <p>Fee Type: {{ investment.fees_type }}</p>
+      <h1 class="text-center mt-3 mb-3">{{ investment.startup_name }}</h1>
 
       <div class="button-group">
+        <a href="{% url 'finance:index' %}" class="btn btn-outline-dark"
+          >Home</a
+        >
+
+        <a href="{% url 'finance:investments' %}" class="btn btn-outline-dark"
+          >Investments</a
+        >
         <form
           method="post"
           action="{% url 'finance:generate_investment_bill' investment.id %}"
         >
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-dark">
-            Generate Bill
-          </button>
+          <button type="submit" class="btn btn-dark">Generate Bill</button>
         </form>
-
-        <a href="{% url 'finance:index' %}" class="btn btn-dark"
-          >Go to Finance Page</a
-        >
       </div>
 
       {% if messages %} {% for message in messages %}
       <p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
         {{ message }}
       </p>
-      {% endfor %} {% endif %} {% else %}
+      {% endfor %} {% endif %} {% if investment %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Investor</th>
+            <th scope="col">Startup Name</th>
+            <th scope="col">Invested Amount</th>
+            <th scope="col">Percentage Fee</th>
+            <th scope="col">Date Added</th>
+            <th scope="col">Fee Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>{{ investment.id }}</th>
+            <td>{{ investment.investor_id }}</td>
+            <td>
+              <a
+                href="{% url 'finance:investment' investment.id %}"
+                class="mb-3"
+              >
+                {{ investment.startup_name }}
+              </a>
+            </td>
+            <td>€{{ investment.invested_amount|intcomma}}</td>
+            <td>{{ investment.percentage_fees }}%</td>
+            <td>{{ investment.date_added }}</td>
+            <td>{{ investment.fees_type }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {% else %}
       <p>No investment information available.</p>
       {% endif %}
     </div>

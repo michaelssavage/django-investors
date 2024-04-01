@@ -6,9 +6,9 @@ Requirements: django, docker-compose, pandas
 
 ## Setup
 
-docker-compose and a virtual env is needed. Create a venv by running `python -m venv ./venv`.
+You need docker-compose and a virtual environment. Create a new venv by running `python -m venv ./venv`.
 
-Install the requirements, django and pandas, by activating the venv and run `pip install -r requirements.txt`
+Install the requirements by activating the venv and running `pip install -r requirements.txt`
 
 ## Running the database with docker
 

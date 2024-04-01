@@ -27,9 +27,20 @@ def investment(request, investment_id):
     return render(request, "finance/investment.html", context)
 
 
+def investments(request):
+    investments = Investment.objects.all()
+    context = {"investments": investments}
+    return render(request, "finance/investments.html", context)
+
+
 def investor(request, investor_id):
     investor = get_object_or_404(Investor, pk=investor_id)
     return render(request, "finance/investor.html", {"investor": investor})
+
+
+def investors(request):
+    investors = Investor.objects.all()
+    return render(request, "finance/investors.html", {"investors": investors})
 
 
 def bill(request, bill_id):
@@ -40,10 +51,19 @@ def bill(request, bill_id):
     return render(request, "finance/bill.html", context)
 
 
+def bills(request):
+    bills = Bill.objects.all()
+    return render(request, "finance/bills.html", {"bills": bills})
+
+
 def cashcall(request, cashcall_id):
     cashcall = get_object_or_404(CashCall, pk=cashcall_id)
-    context = {"cashcall": cashcall}
-    return render(request, "finance/cashcall.html", context)
+    return render(request, "finance/cashcall.html", {"cashcall": cashcall})
+
+
+def cashcalls(request):
+    cashcalls = CashCall.objects.all()
+    return render(request, "finance/cashcalls.html", {"cashcalls": cashcalls})
 
 
 def generate_investment_bill(request, investment_id):
@@ -143,4 +163,10 @@ def update_invoice_status(request, cashcall_id):
     cashcall.invoice_status = invoice_status
     cashcall.save()
     messages.success(request, "Invoice status updated successfully.")
+    return handle_redirect(redirect_uri)
+
+
+def send_invoice(request, cashcall_id):
+    messages.success(request, "Invoice has been sent to investor.")
+    redirect_uri = reverse("finance:cashcall", args=(cashcall_id,))
     return handle_redirect(redirect_uri)
