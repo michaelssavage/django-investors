@@ -10,6 +10,10 @@ Spin up a Postgres database with `./scripts/start-dev-db.sh`
 
 ## Initial Data Loading
 
-There are investors and investments fixtures available for populating the data.
+Add the investments.csv and investors.csv to the root of the project, then run these:
 
-Just run: `python manage.py loaddata fixtures/*.json`
+`python manage.py populate_data --path investor.csv --model investor`
+
+## Run the app
+
+`python manage.py runserver`
