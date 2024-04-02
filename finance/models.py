@@ -1,6 +1,8 @@
 from datetime import datetime, UTC
 from decimal import Decimal
+from django import forms
 from django.db import models
+from django.contrib.admin.helpers import ActionForm
 
 PAYMENT_CHOICES = [
     ("upfront", "Upfront"),
@@ -150,3 +152,7 @@ class CashCall(models.Model):
 
     def __str__(self):
         return f"CashCall {self.id}"
+
+
+class GroupBills(ActionForm):
+    investor = forms.ModelChoiceField(queryset=Investor.objects.all(), required=False)

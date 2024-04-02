@@ -1,13 +1,14 @@
 from datetime import datetime, UTC
 from django.http import HttpResponse
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.utils import formats
 from finance.utils import *
 from finance.models import Bill, CashCall, Investment, Investor
 import re
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-from django.utils import formats
 
 
 def index(request):
@@ -91,7 +92,7 @@ def generate_investment_bill(request, investment_id):
         date_added=now,
         fees_type=investment.fees_type,
     )
-    messages.success(request, BILL_SUCCESS)
+    messages.success(request, f"Bill {investment.investor_id} created successfully.")
     return handle_redirect(redirect_uri)
 
 
@@ -125,7 +126,7 @@ def generate_investor_cash_call(request, investor_id):
         invoice_status="PENDING",
     )
 
-    messages.success(request, CASH_CALL_SUCCESS)
+    messages.success(request, f"Cash Call {total_amount} created successfully.")
     return handle_redirect(redirect_uri)
 
 
@@ -133,7 +134,7 @@ def generate_all_bills(request):
     investments = Investment.objects.all()
     redirect_uri = reverse("finance:index")
     if not investments:
-        messages.warning(request, "No investments found. Please add investments first.")
+        messages.warning(request, "Please add investments before generating bills.")
         return handle_redirect(redirect_uri)
     for investment in investments:
         generate_investment_bill(request, investment.id)
