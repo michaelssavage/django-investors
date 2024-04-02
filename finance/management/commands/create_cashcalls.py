@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 IBAN=iban,
                 email_send=investor.email,
                 date_added=now,
-                invoice_status="PENDING",
+                invoice_status="Pending",
             )
 
         self.stdout.write(self.style.SUCCESS("Cash Calls created."))

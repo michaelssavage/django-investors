@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Investor, Investment, Bill, CashCall, GroupBills
+from .models import GroupInvoiceStatus, Investor, Investment, Bill, CashCall, GroupBills
 from django.utils.translation import ngettext
 from django.contrib import messages
 
@@ -46,10 +46,31 @@ class InvestmentAdmin(admin.ModelAdmin):
 
 
 class CashCallAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "total_amount",
-    )
+    list_display = ("id", "total_amount", "current_invoice_status")
+
+    action_form = GroupInvoiceStatus
+    actions = ["group_invoices"]
+
+    @admin.action(description="Group invoices by status")
+    def group_invoices(self, request, queryset):
+
+        print("r", request.POST["invoice_status"])
+        print("q", queryset)
+        invoice_status = request.POST["invoice_status"]
+        updated = queryset.update(invoice_status=invoice_status)
+        self.message_user(
+            request,
+            ngettext(
+                "%d cash call invoice status was successfully updated.",
+                "%d cash call invoice statuses were successfully updated.",
+                updated,
+            )
+            % updated,
+            messages.SUCCESS,
+        )
+
+    def current_invoice_status(self, obj):
+        return obj.invoice_status
 
 
 admin.site.register(Investor, InvestorAdmin)

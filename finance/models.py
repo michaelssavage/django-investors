@@ -156,3 +156,9 @@ class CashCall(models.Model):
 
 class GroupBills(ActionForm):
     investor = forms.ModelChoiceField(queryset=Investor.objects.all(), required=False)
+
+
+class GroupInvoiceStatus(ActionForm):
+    invoice_status = forms.ChoiceField(
+        choices=CashCall.INVOICE_STATUS_CHOICES, required=False
+    )

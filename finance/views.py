@@ -123,7 +123,7 @@ def generate_investor_cash_call(request, investor_id):
         IBAN=iban,
         email_send=investor.email,
         date_added=now,
-        invoice_status="PENDING",
+        invoice_status="Pending",
     )
 
     messages.success(request, f"Cash Call {total_amount} created successfully.")
