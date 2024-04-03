@@ -4,7 +4,7 @@ This Django app automates the creation of cash calls for an investor. A cash cal
 
 Once cash calls are validated, an PDF invoice is generated.
 
-Notion was used for jotting initial assumptions, and Trello was used for tracking work.
+Notion was used for jotting initial assumptions, Trello was used for tracking work, and PostGreSQL database was used.
 
 ## Setup
 
