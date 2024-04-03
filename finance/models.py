@@ -4,57 +4,18 @@ from django import forms
 from django.db import models
 from django.contrib.admin.helpers import ActionForm
 
-PAYMENT_CHOICES = [
-    ("upfront", "Upfront"),
-    ("yearly", "Yearly"),
-]
-
-POINT_TWO_PERCENT = Decimal(0.002)
-POINT_FIVE_PERCENT = Decimal(0.005)
-ONE_PERCENT = Decimal(0.01)
-FEE_UPDATE_DATE = datetime(2019, 4, 1).timestamp()
-LARGE_INVESTMENT_THRESHOLD = 50000
-MEMBERSHIP_FEE = 3000
-
-
-def getYearsSincePurchase(date_val: datetime):
-    return round((datetime.now(UTC) - date_val).days / 365)
-
-
-def getDayOfYearPercentage(date_val: datetime):
-    value = date_val.timetuple().tm_yday
-    return Decimal(1) if value > 365 else Decimal(round((value / 365), 2))
-
-
-def addPre2019Fees(date_val: datetime, invested_amount: int, percentage_fees: int):
-    fee: Decimal = 0
-
-    # initial fee
-    fee += getDayOfYearPercentage(date_val) * invested_amount * percentage_fees
-
-    for _ in range(getYearsSincePurchase(date_val)):
-        fee += percentage_fees * invested_amount
-    return fee
-
-
-def addPost2019Fees(date_val: datetime, invested_amount: int, percentage_fees: int):
-    fee: Decimal = 0
-
-    # initial fee
-    fee += getDayOfYearPercentage(date_val) * invested_amount * percentage_fees
-
-    for year in range(getYearsSincePurchase(date_val)):
-        if year == 0:
-            fee += percentage_fees * invested_amount
-        elif year == 1:
-            fee += (percentage_fees - POINT_TWO_PERCENT) * invested_amount
-        elif year == 2:
-            fee += (percentage_fees - POINT_FIVE_PERCENT) * invested_amount
-        else:
-            fee += (percentage_fees - ONE_PERCENT) * invested_amount
-
-        fee += percentage_fees * invested_amount
-    return fee
+from finance.utils import (
+    PAYMENT_CHOICES,
+    POINT_TWO_PERCENT,
+    POINT_FIVE_PERCENT,
+    ONE_PERCENT,
+    FEE_UPDATE_DATE,
+    LARGE_INVESTMENT_THRESHOLD,
+    MEMBERSHIP_FEE,
+    UPFRONT_YEARS,
+    get_day_of_year_percentage,
+    get_remaining_years_since_purchase,
+)
 
 
 class Investor(models.Model):
@@ -73,6 +34,7 @@ class Investor(models.Model):
 
 
 class Investment(models.Model):
+
     id = models.AutoField(primary_key=True)
     investor_id = models.ForeignKey(Investor, on_delete=models.CASCADE)
     startup_name = models.CharField(max_length=100)
@@ -84,32 +46,83 @@ class Investment(models.Model):
     class Meta:
         ordering = ["id"]
 
+    def save(self, *args, **kwargs):
+        self.percentage_fees = Decimal(str(self.percentage_fees / 100))
+        super().save(*args, **kwargs)
+
+    def display_percentage_fees(self):
+        return self.percentage_fees * 100
+
     def __str__(self):
         return self.startup_name
 
-    def generate_bill(self):
+    def add_pre_2019_fees(self):
+        fee: Decimal = 0
+
+        # first year
+        fee += (
+            get_day_of_year_percentage(self.date_added)
+            * self.invested_amount
+            * self.percentage_fees
+        )
+
+        # other years
+        for _ in range(get_remaining_years_since_purchase(self.date_added)):
+            fee += self.percentage_fees * self.invested_amount
+
+        return fee
+
+    def add_post_2019_fees(self):
+        fee: Decimal = 0
+
+        # initial fee
+        fee += (
+            get_day_of_year_percentage(self.date_added)
+            * self.invested_amount
+            * self.percentage_fees
+        )
+        for index in range(get_remaining_years_since_purchase(self.date_added)):
+            # year 1
+            if index == 0:
+                fee += self.percentage_fees * self.invested_amount
+            # year 2
+            elif index == 1:
+                fee += (self.percentage_fees - POINT_TWO_PERCENT) * self.invested_amount
+            # year 3
+            elif index == 2:
+                fee += (
+                    self.percentage_fees - POINT_FIVE_PERCENT
+                ) * self.invested_amount
+            else:
+                fee += (self.percentage_fees - ONE_PERCENT) * self.invested_amount
+
+        return fee
+
+    def add_membership_fee(self):
         fee = 0
         if self.invested_amount < LARGE_INVESTMENT_THRESHOLD:
-            fee += getYearsSincePurchase(self.date_added) * MEMBERSHIP_FEE
-            print("membership fee added")
+            fee += get_remaining_years_since_purchase(self.date_added) * MEMBERSHIP_FEE
+        return fee
 
-        if self.fees_type == "upfront":
-            fee += (
-                self.invested_amount
-                * self.percentage_fees
-                * getYearsSincePurchase(self.date_added)
-            )
+    def add_upfront_fee(self):
+        fee = 0
+        fee += self.invested_amount * self.percentage_fees * UPFRONT_YEARS
+        return fee
+
+    def generate_bill(self):
+        fee = 0
+        fee += self.add_membership_fee()
+        print(f"membership fee added: {fee}")
+
+        if self.fees_type == "Upfront":
+            fee += self.add_upfront_fee()
             print("upfront fee added")
         else:
             if self.date_added.timestamp() < FEE_UPDATE_DATE:
-                fee += addPre2019Fees(
-                    self.date_added, self.invested_amount, self.percentage_fees
-                )
+                fee += self.add_pre_2019_fees()
                 print("Pre 2019 fee added")
             else:
-                fee += addPost2019Fees(
-                    self.date_added, self.invested_amount, self.percentage_fees
-                )
+                fee += self.add_post_2019_fees()
                 print("Post 2019 fee added")
         return fee
 
