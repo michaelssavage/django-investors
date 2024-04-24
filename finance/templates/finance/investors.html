@@ -1,0 +1,42 @@
+<!-- prettier-ignore -->
+{% extends "finance/base.html" %} 
+{% block title %}Investors{% endblock %}
+{% block h1 %}Investors{% endblock %}
+{% block content %}
+
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if investors %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Credit</th>
+      <th>Phone</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for investor in investors %}
+    <tr>
+      <th>{{ investor.id }}</th>
+      <td>
+        <a href="{% url 'finance:investor' investor.id %}" class="mb-3">
+          {{ investor.name }}
+        </a>
+      </td>
+      <td>{{ investor.address }}</td>
+      <td>{{ investor.credit}}</td>
+      <td>{{ investor.phone }}</td>
+      <td class="breakcell">{{ investor.email }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No investors are available.</p>
+{% endif %} {% endblock %}

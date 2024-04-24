@@ -1,0 +1,80 @@
+<!-- prettier-ignore -->
+{% extends "finance/base.html" %} 
+{% block title %}OneRagTime{% endblock %}
+{% block h1 %}OneRagTime Challenge{% endblock %}
+{% block content %}
+
+  {% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Investments</th>
+      <th>Investors</th>
+      <th>Bills</th>
+      <th>Cash Calls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th class="fw-normal">
+        {% if investments %}
+        <a href="{% url 'finance:investments' %}">View All Investments</a>
+        {% else %}
+        <p>No investments are available.</p>
+        {% endif %}
+      </th>
+      <td>
+        {% if investors %}
+        <a href="{% url 'finance:investors' %}">View All Investors</a>
+        {% else %}
+        <p>No investors are available.</p>
+        {% endif %}
+      </td>
+      <td>
+        {% if bills %}
+        <a href="{% url 'finance:bills' %}">View All Bills</a>
+        {% else %}
+        <p>No bills are available.</p>
+        {% endif %}
+      </td>
+      <td>
+        {% if cashcalls %}
+        <a href="{% url 'finance:cashcalls' %}">View All Cash Calls</a>
+        {% else %}
+        <p>No cash calls are available.</p>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ul>
+  <li>
+    Upload the investors and investments by using the script in the root of the
+    folder.
+  </li>
+
+  <li>
+    Send an invoice to an investor by clicking on the cash call and validating
+    the invoice status
+  </li>
+</ul>
+
+<div class="button-group">
+  <form method="post" action="{% url 'finance:generate_all_bills' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-dark">
+      Generate All Bills
+    </button>
+  </form>
+
+  <form method="post" action="{% url 'finance:generate_all_cash_calls' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-dark">Generate All Cash Calls</button>
+  </form>
+</div>
+{% endblock %}

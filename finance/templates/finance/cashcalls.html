@@ -1,0 +1,43 @@
+<!-- prettier-ignore -->
+{% extends "finance/base.html" %} 
+{% load humanize %}
+{% block title %}Cash Calls{% endblock %}
+{% block h1 %}Cash Calls{% endblock %}
+{% block content %}
+
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %} {% if cashcalls %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th class="nowrap">Total Amount</th>
+      <th>IBAN</th>
+      <th class="breakcell">Email</th>
+      <th class="nowrap">Date Added</th>
+      <th class="nowrap">Invoice Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cashcall in cashcalls %}
+    <tr>
+      <th>
+        <a href="{% url 'finance:cashcall' cashcall.id %}" class="mb-3">
+          {{cashcall.id}}
+        </a>
+      </th>
+      <td>€{{ cashcall.total_amount|intcomma }}</td>
+      <td>{{ cashcall.IBAN }}</td>
+      <td>{{ cashcall.email_send}}</td>
+      <td>{{ cashcall.date_added }}</td>
+      <td>{{ cashcall.invoice_status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No cashcalls are available.</p>
+{% endif %} {% endblock %}

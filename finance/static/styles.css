@@ -1,0 +1,38 @@
+:root {
+  --black: rgb(25, 25, 25);
+  --grey: rgb(61, 61, 61);
+  --white: #dde5ec;
+  --green: #2c975a;
+  --orange: rgb(220, 153, 27);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+h1 {
+  text-transform: uppercase;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.breakcell {
+  word-wrap: break-word;
+  max-width: 150px;
+}

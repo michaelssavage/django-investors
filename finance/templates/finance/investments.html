@@ -1,0 +1,48 @@
+<!-- prettier-ignore -->
+{% extends "finance/base.html" %} 
+{% load humanize %}
+{% block title %}Investments{% endblock %}
+{% block h1 %}Investments{% endblock %}
+{% block content %}
+
+{% if messages %} {% for message in messages %}
+<p {% if message.tags %} class="text-{{ message.tags }}" {% endif %}>
+  {{ message }}
+</p>
+{% endfor %} {% endif %}
+
+<!-- prettier-ignore -->
+{% if investments %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Investor</th>
+      <th class="nowrap">Startup Name</th>
+      <th class="nowrap">Invested Amount</th>
+      <th class="nowrap">Percentage Fee</th>
+      <th class="nowrap">Date Added</th>
+      <th class="nowrap">Fee Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for investment in investments %}
+    <tr>
+      <th>{{ investment.id }}</th>
+      <td>{{ investment.investor_id }}</td>
+      <td>
+        <a href="{% url 'finance:investment' investment.id %}" class="mb-3">
+          {{ investment.startup_name }}
+        </a>
+      </td>
+      <td>€{{ investment.invested_amount|intcomma}}</td>
+      <td>{{ investment.percentage_fees }}%</td>
+      <td>{{ investment.date_added }}</td>
+      <td>{{ investment.fees_type }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No investments are available.</p>
+{% endif %} {% endblock %}

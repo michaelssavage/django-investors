@@ -1,39 +1,35 @@
 # oneragtime-challenge
 
-## About
+This Django app automates the creation of cash calls for an investor. A cash call is an invoice consisting of a group bills. Generated bills and cash calls are stored in PostgreSQL.
 
-Django app to automate the sending of cash calls to the investor.
+Once cash calls are validated, an PDF invoice is generated.
 
-```
-💡 A Cash call is an invoice we send to the user (in this example an investor), it groups a set of bills
-```
+Notion was used for jotting initial assumptions, Trello was used for tracking work, and PostGreSQL database was used.
 
-- Generated bills are stored.
-- Admin can group bills by investor.
-- Once validated, generate invoice and email the investor.
-- Keep check of status of cash call; validated, sent, paid, overdue
+## Setup
 
-## Bills
+You need docker-compose and a virtual environment. Create a new venv by running `python -m venv ./venv`.
 
-### **Membership:**
+Install the requirements by activating the venv and running `pip install -r requirements.txt`
 
-If active and didn’t invest €50,000: €3000 per year.
+## Running the database with docker
 
-### **Upfront**:
+Spin up a Postgres database by running `./scripts/start-dev-db.sh`
 
-Pay all fees and bill once. Fee % x Amount Invested x 5
+## Run the app
 
-### **Yearly fees:**
+You can then start the server by running `python manage.py runserver` and visiting `http://127.0.0.1:8000/`.
 
-Before April 2019
+## Initial Data Loading
 
-- 1st year: date / 365 x fee % x amount invested
-- Following years: Fee perentage x amount invested
+Add the investments.csv and investors.csv to the database by running `./scripts/load-postgres-data.sh`
 
-After April 2019
+You now have the option of adding the cash calls from the GUI or by script.
 
-- 1st year: date / 365 x fee % x amount invested
-- 2nd year: Fee perentage x amount invested
-- 3rd year: (Fee perentage - .20%) x amount invested
-- 4th Year: (Fee perentage - .50%) x amount invested
-- Following Year: (Fee perentage - 1%) x amount invested
+#### 1. Script
+
+Run `./scripts/create-cash-calls-data.sh` to generate bills and cash calls. You can view the changes in the GUI when you refresh the page.
+
+#### 2. GUI
+
+You can create cash calls in the GUI at `http://127.0.0.1:8000/` by clicking the Generate All Bills button then clicking the Generate All Cash Calls button.
