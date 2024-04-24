@@ -1,4 +1,4 @@
-# oneragtime-challenge
+# django-investors
 
 This Django app automates the creation of cash calls for an investor. A cash call is an invoice consisting of a group bills. Generated bills and cash calls are stored in PostgreSQL.
 
